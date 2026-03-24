@@ -1,8 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.3.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 }
 
-group = "net.azisaba"
+group = "net.azisaba.serialization"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -10,6 +11,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly(libs.kotlinx.serialization.core)
     testImplementation(kotlin("test"))
 }
 
