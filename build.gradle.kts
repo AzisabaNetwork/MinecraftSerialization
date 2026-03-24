@@ -1,24 +1,37 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.serialization)
+    base
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 group = "net.azisaba.serialization"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+val kotlinx = libs.kotlinx
 
-dependencies {
-    compileOnly(libs.kotlinx.serialization.core)
-    testImplementation(kotlin("test"))
-}
+configure(subprojects.filter { it.childProjects.isEmpty() }) {
+    group = rootProject.group
+    version = rootProject.version
 
-kotlin {
-    jvmToolchain(21)
-}
+    apply(plugin = "java-library")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 
-tasks.test {
-    useJUnitPlatform()
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        add("compileOnly", kotlinx.serialization.core)
+        add("testImplementation", kotlin("test"))
+    }
+
+    configure<KotlinJvmProjectExtension> {
+        jvmToolchain(21)
+    }
+
+    configure<JavaPluginExtension> {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    }
 }
