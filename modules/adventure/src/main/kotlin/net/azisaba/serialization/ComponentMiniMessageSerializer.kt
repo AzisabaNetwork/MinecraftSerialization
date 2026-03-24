@@ -12,7 +12,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 class ComponentMiniMessageSerializer(
     private val miniMessage: MiniMessage = MiniMessage.miniMessage(),
 ) : KSerializer<Component> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Component", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ComponentMiniMessage", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Component) {
         val string = miniMessage.serialize(value)

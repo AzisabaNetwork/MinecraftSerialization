@@ -18,7 +18,7 @@ class ComponentJsonSerializer(
     private val json: Json = Json.Default,
     private val adventure: JSONComponentSerializer = JSONComponentSerializer.json(),
 ) : KSerializer<Component> {
-    override val descriptor: SerialDescriptor = buildSerialDescriptor("Component", SerialKind.CONTEXTUAL)
+    override val descriptor: SerialDescriptor = buildSerialDescriptor("ComponentJson", SerialKind.CONTEXTUAL)
 
     override fun serialize(encoder: Encoder, value: Component) {
         require(encoder is JsonEncoder) {
