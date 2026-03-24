@@ -12,7 +12,8 @@ object KeySerializer : KSerializer<Key> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Key", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Key) {
-        encoder.encodeString(value.asString())
+        val string = value.toString()
+        encoder.encodeString(string)
     }
 
     override fun deserialize(decoder: Decoder): Key {

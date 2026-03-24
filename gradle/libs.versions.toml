@@ -9,4 +9,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 [libraries]
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventure-text-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+adventure-text-serializers-gson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
