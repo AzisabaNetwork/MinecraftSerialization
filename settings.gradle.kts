@@ -3,4 +3,5 @@ plugins {
 }
 rootProject.name = "minecraft-serialization"
 
-include(":modules:adventure")
+include("modules:adventure")
+include("modules:joml")
