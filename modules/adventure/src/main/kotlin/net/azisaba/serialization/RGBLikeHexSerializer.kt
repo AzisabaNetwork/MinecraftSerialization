@@ -1,6 +1,7 @@
 package net.azisaba.serialization
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -40,9 +41,7 @@ object RGBLikeHexSerializer : KSerializer<RGBLike> {
                 }
             }
 
-            else -> throw IllegalArgumentException(
-                "HEX color must be 3 or 6 characters, got $string"
-            )
+            else -> throw SerializationException("HEX color must be 3 or 6 characters, got $string")
         }
 
         require(HEX_REGEX.matches(normalized)) {
