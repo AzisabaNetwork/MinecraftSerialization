@@ -6,7 +6,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.ARGBLike
 
@@ -44,6 +43,14 @@ object ARGBHexSerializer : KSerializer<ARGBLike> {
         val blue = ((value shr 8) and 0xff).toInt()
         val alpha = (value and 0xff).toInt()
 
-        return ShadowColor.shadowColor(red, green, blue, alpha)
+        return object : ARGBLike {
+            override fun red(): Int = red
+
+            override fun green(): Int = green
+
+            override fun blue(): Int = blue
+
+            override fun alpha(): Int = alpha
+        }
     }
 }

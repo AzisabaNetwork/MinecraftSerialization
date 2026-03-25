@@ -13,6 +13,19 @@ import kotlin.test.assertFailsWith
 class AdventureSerializersTest {
     private val json = Json
 
+    private fun assertRgbEquals(expected: TextColor, actual: net.kyori.adventure.util.RGBLike) {
+        assertEquals(expected.red(), actual.red())
+        assertEquals(expected.green(), actual.green())
+        assertEquals(expected.blue(), actual.blue())
+    }
+
+    private fun assertArgbEquals(expected: ShadowColor, actual: net.kyori.adventure.util.ARGBLike) {
+        assertEquals(expected.red(), actual.red())
+        assertEquals(expected.green(), actual.green())
+        assertEquals(expected.blue(), actual.blue())
+        assertEquals(expected.alpha(), actual.alpha())
+    }
+
     @Test
     fun keySerializerRoundTrips() {
         val key = Key.key("minecraft", "stone")
@@ -52,7 +65,7 @@ class AdventureSerializersTest {
         val decoded = json.decodeFromString(RGBIntSerializer, encoded)
 
         assertEquals("1193046", encoded)
-        assertEquals(color, decoded)
+        assertRgbEquals(color, decoded)
     }
 
     @Test
@@ -63,7 +76,7 @@ class AdventureSerializersTest {
         val decoded = json.decodeFromString(RGBHexSerializer, encoded)
 
         assertEquals("\"#123456\"", encoded)
-        assertEquals(color, decoded)
+        assertRgbEquals(color, decoded)
     }
 
     @Test
@@ -74,7 +87,16 @@ class AdventureSerializersTest {
         val decoded = json.decodeFromString(RGBArraySerializer, encoded)
 
         assertEquals("[18,52,86]", encoded)
-        assertEquals(color, decoded)
+        assertRgbEquals(color, decoded)
+    }
+
+    @Test
+    fun textColorSerializersRoundTrip() {
+        val color = TextColor.color(0x12, 0x34, 0x56)
+
+        assertEquals(color, json.decodeFromString(TextColorIntSerializer, json.encodeToString(TextColorIntSerializer, color)))
+        assertEquals(color, json.decodeFromString(TextColorHexSerializer, json.encodeToString(TextColorHexSerializer, color)))
+        assertEquals(color, json.decodeFromString(TextColorArraySerializer, json.encodeToString(TextColorArraySerializer, color)))
     }
 
     @Test
@@ -85,7 +107,7 @@ class AdventureSerializersTest {
         val decoded = json.decodeFromString(ARGBIntSerializer, encoded)
 
         assertEquals("2014458966", encoded)
-        assertEquals(color, decoded)
+        assertArgbEquals(color, decoded)
     }
 
     @Test
@@ -96,7 +118,7 @@ class AdventureSerializersTest {
         val decoded = json.decodeFromString(ARGBHexSerializer, encoded)
 
         assertEquals("\"#12345678\"", encoded)
-        assertEquals(color, decoded)
+        assertArgbEquals(color, decoded)
     }
 
     @Test
@@ -107,7 +129,16 @@ class AdventureSerializersTest {
         val decoded = json.decodeFromString(ARGBArraySerializer, encoded)
 
         assertEquals("[18,52,86,120]", encoded)
-        assertEquals(color, decoded)
+        assertArgbEquals(color, decoded)
+    }
+
+    @Test
+    fun shadowColorSerializersRoundTrip() {
+        val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
+
+        assertEquals(color, json.decodeFromString(ShadowColorIntSerializer, json.encodeToString(ShadowColorIntSerializer, color)))
+        assertEquals(color, json.decodeFromString(ShadowColorHexSerializer, json.encodeToString(ShadowColorHexSerializer, color)))
+        assertEquals(color, json.decodeFromString(ShadowColorArraySerializer, json.encodeToString(ShadowColorArraySerializer, color)))
     }
 
     @Test

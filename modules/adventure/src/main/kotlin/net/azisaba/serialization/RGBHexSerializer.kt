@@ -54,6 +54,12 @@ object RGBHexSerializer : KSerializer<RGBLike> {
         val green = (value shr 8) and 0xff
         val blue = value and 0xff
 
-        return TextColor.color(red, green, blue)
+        return object : RGBLike {
+            override fun red(): Int = red
+
+            override fun green(): Int = green
+
+            override fun blue(): Int = blue
+        }
     }
 }

@@ -6,7 +6,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.RGBLike
 
 object RGBIntSerializer : KSerializer<RGBLike> {
@@ -36,6 +35,12 @@ object RGBIntSerializer : KSerializer<RGBLike> {
         val green = (packed shr 8) and 0xff
         val blue = packed and 0xff
 
-        return TextColor.color(red, green, blue)
+        return object : RGBLike {
+            override fun red(): Int = red
+
+            override fun green(): Int = green
+
+            override fun blue(): Int = blue
+        }
     }
 }

@@ -10,7 +10,6 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
-import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.util.ARGBLike
 
 @OptIn(InternalSerializationApi::class)
@@ -63,6 +62,14 @@ object ARGBArraySerializer : KSerializer<ARGBLike> {
             "ARGB value must be between 0 and 255"
         }
 
-        return ShadowColor.shadowColor(r, g, b, a)
+        return object : ARGBLike {
+            override fun red(): Int = r
+
+            override fun green(): Int = g
+
+            override fun blue(): Int = b
+
+            override fun alpha(): Int = a
+        }
     }
 }

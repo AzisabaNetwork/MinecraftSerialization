@@ -10,7 +10,6 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.RGBLike
 
 @OptIn(InternalSerializationApi::class)
@@ -58,6 +57,12 @@ object RGBArraySerializer : KSerializer<RGBLike> {
             "RGB value must be between 0 and 255"
         }
 
-        return TextColor.color(r, g, b)
+        return object : RGBLike {
+            override fun red(): Int = r
+
+            override fun green(): Int = g
+
+            override fun blue(): Int = b
+        }
     }
 }
