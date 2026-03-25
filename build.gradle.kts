@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.azisaba.serialization"
-version = "1.0-SNAPSHOT"
+version = System.getenv("VERSION") ?: "0.0.0-SNAPSHOT"
 
 val kotlinx = libs.kotlinx
 
@@ -16,6 +16,7 @@ configure(subprojects.filter { it.childProjects.isEmpty() }) {
     version = rootProject.version
 
     apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
     repositories {
@@ -33,5 +34,30 @@ configure(subprojects.filter { it.childProjects.isEmpty() }) {
 
     configure<JavaPluginExtension> {
         toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    }
+
+    configure<PublishingExtension> {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+                groupId = group.toString()
+                artifactId = project.name
+                version = version.toString()
+            }
+        }
+        repositories {
+            maven {
+                name = "azisaba"
+                url = if (version.toString().contains("SNAPSHOT")) {
+                    uri("https://repo.azisaba.net/repository/maven-snapshots/")
+                } else {
+                    uri("https://repo.azisaba.net/repository/maven-releases/")
+                }
+                credentials {
+                    username = System.getenv("REPO_USERNAME")
+                    password = System.getenv("REPO_PASSWORD")
+                }
+            }
+        }
     }
 }
