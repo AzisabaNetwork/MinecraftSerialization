@@ -41,15 +41,15 @@ class AdventureSerializersTest {
     fun componentJsonSerializerRoundTrips() {
         val component = Component.text("hello").color(TextColor.color(0x12, 0x34, 0x56))
 
-        val encoded = json.encodeToString(ComponentJsonSerializer(), component)
-        val decoded = json.decodeFromString(ComponentJsonSerializer(), encoded)
+        val encoded = json.encodeToString(ComponentJsonSerializer, component)
+        val decoded = json.decodeFromString(ComponentJsonSerializer, encoded)
 
         assertEquals(component, decoded)
     }
 
     @Test
     fun componentMiniMessageSerializerRoundTrips() {
-        val serializer = ComponentMiniMessageSerializer()
+        val serializer = ComponentMiniMessageSerializer
         val encoded = json.encodeToString(serializer, Component.text("hello"))
         val decoded = json.decodeFromString(serializer, encoded)
 
