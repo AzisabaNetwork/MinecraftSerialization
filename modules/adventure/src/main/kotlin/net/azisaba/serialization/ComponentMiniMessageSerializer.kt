@@ -9,9 +9,9 @@ import kotlinx.serialization.encoding.Encoder
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 
-class ComponentMiniMessageSerializer(
-    private val miniMessage: MiniMessage = MiniMessage.miniMessage(),
-) : KSerializer<Component> {
+class ComponentMiniMessageSerializer(private val miniMessage: MiniMessage) : KSerializer<Component> {
+    constructor() : this(MiniMessage.miniMessage())
+
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ComponentMiniMessage", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Component) {

@@ -15,9 +15,10 @@ import net.kyori.adventure.text.serializer.json.JSONComponentSerializer
 
 @OptIn(InternalSerializationApi::class)
 class ComponentJsonSerializer(
-    private val json: Json = Json.Default,
-    private val adventure: JSONComponentSerializer = JSONComponentSerializer.json(),
+    private val json: Json, private val adventure: JSONComponentSerializer,
 ) : KSerializer<Component> {
+    constructor() : this(Json.Default, JSONComponentSerializer.json())
+
     override val descriptor: SerialDescriptor = buildSerialDescriptor("ComponentJson", SerialKind.CONTEXTUAL)
 
     override fun serialize(encoder: Encoder, value: Component) {
