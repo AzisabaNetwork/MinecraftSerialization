@@ -1,7 +1,6 @@
 package net.azisaba.serialization
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -11,8 +10,8 @@ import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.ARGBLike
 
-object ARGBLikeHexSerializer : KSerializer<ARGBLike> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ARGBLikeHex", PrimitiveKind.STRING)
+object ARGBHexSerializer : KSerializer<ARGBLike> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ARGBHex", PrimitiveKind.STRING)
 
     private val HEX_REGEX: Regex = Regex("[0-9a-fA-F]{8}")
 

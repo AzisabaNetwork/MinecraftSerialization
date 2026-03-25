@@ -9,8 +9,8 @@ import kotlinx.serialization.encoding.Encoder
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.RGBLike
 
-object RGBLikeIntSerializer : KSerializer<RGBLike> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("RGBLikeInt", PrimitiveKind.INT)
+object RGBIntSerializer : KSerializer<RGBLike> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("RGBInt", PrimitiveKind.INT)
 
     override fun serialize(encoder: Encoder, value: RGBLike) {
         val red = value.red()

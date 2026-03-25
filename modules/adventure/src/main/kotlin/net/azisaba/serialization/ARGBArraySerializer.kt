@@ -14,8 +14,8 @@ import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.util.ARGBLike
 
 @OptIn(InternalSerializationApi::class)
-object ARGBLikeArraySerializer : KSerializer<ARGBLike> {
-    override val descriptor: SerialDescriptor = buildSerialDescriptor("ARGBLikeArray", StructureKind.LIST)
+object ARGBArraySerializer : KSerializer<ARGBLike> {
+    override val descriptor: SerialDescriptor = buildSerialDescriptor("ARGBArray", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: ARGBLike) {
         val red = value.red()
@@ -49,15 +49,15 @@ object ARGBLikeArraySerializer : KSerializer<ARGBLike> {
                     2 -> blue = decodeIntElement(descriptor, 2)
                     3 -> alpha = decodeIntElement(descriptor, 3)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> throw SerializationException("ARGBLikeArray index must be between 0 and 3, got: $index")
+                    else -> throw SerializationException("ARGBArray index must be between 0 and 3, got: $index")
                 }
             }
         }
 
-        val r = red ?: throw SerializationException("ARGBLikeArray must contain red")
-        val g = green ?: throw SerializationException("ARGBLikeArray must contain green")
-        val b = blue ?: throw SerializationException("ARGBLikeArray must contain blue")
-        val a = alpha ?: throw SerializationException("ARGBLikeArray must contain alpha")
+        val r = red ?: throw SerializationException("ARGBArray must contain red")
+        val g = green ?: throw SerializationException("ARGBArray must contain green")
+        val b = blue ?: throw SerializationException("ARGBArray must contain blue")
+        val a = alpha ?: throw SerializationException("ARGBArray must contain alpha")
 
         require(r in 0..255 && g in 0..255 && b in 0..255 && a in 0..255) {
             "ARGB value must be between 0 and 255"

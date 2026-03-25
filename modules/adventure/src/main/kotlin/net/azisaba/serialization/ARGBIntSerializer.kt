@@ -9,8 +9,8 @@ import kotlinx.serialization.encoding.Encoder
 import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.util.ARGBLike
 
-object ARGBLikeIntSerializer : KSerializer<ARGBLike> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ARGBLikeInt", PrimitiveKind.INT)
+object ARGBIntSerializer : KSerializer<ARGBLike> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ARGBInt", PrimitiveKind.INT)
 
     override fun serialize(encoder: Encoder, value: ARGBLike) {
         val alpha = value.alpha()

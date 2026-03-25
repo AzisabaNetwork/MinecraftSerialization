@@ -10,8 +10,8 @@ import kotlinx.serialization.encoding.Encoder
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.util.RGBLike
 
-object RGBLikeHexSerializer : KSerializer<RGBLike> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("RGBLikeHex", PrimitiveKind.STRING)
+object RGBHexSerializer : KSerializer<RGBLike> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("RGBHex", PrimitiveKind.STRING)
 
     private val HEX_REGEX: Regex = Regex("[0-9a-fA-F]{6}")
 

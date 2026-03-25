@@ -1,8 +1,6 @@
 package net.azisaba.serialization
 
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -50,8 +48,8 @@ class AdventureSerializersTest {
     fun rgbLikeIntSerializerRoundTrips() {
         val color = TextColor.color(0x12, 0x34, 0x56)
 
-        val encoded = json.encodeToString(RGBLikeIntSerializer, color)
-        val decoded = json.decodeFromString(RGBLikeIntSerializer, encoded)
+        val encoded = json.encodeToString(RGBIntSerializer, color)
+        val decoded = json.decodeFromString(RGBIntSerializer, encoded)
 
         assertEquals("1193046", encoded)
         assertEquals(color, decoded)
@@ -61,8 +59,8 @@ class AdventureSerializersTest {
     fun rgbLikeHexSerializerRoundTrips() {
         val color = TextColor.color(0x12, 0x34, 0x56)
 
-        val encoded = json.encodeToString(RGBLikeHexSerializer, color)
-        val decoded = json.decodeFromString(RGBLikeHexSerializer, encoded)
+        val encoded = json.encodeToString(RGBHexSerializer, color)
+        val decoded = json.decodeFromString(RGBHexSerializer, encoded)
 
         assertEquals("\"#123456\"", encoded)
         assertEquals(color, decoded)
@@ -72,8 +70,8 @@ class AdventureSerializersTest {
     fun rgbLikeArraySerializerRoundTrips() {
         val color = TextColor.color(0x12, 0x34, 0x56)
 
-        val encoded = json.encodeToString(RGBLikeArraySerializer, color)
-        val decoded = json.decodeFromString(RGBLikeArraySerializer, encoded)
+        val encoded = json.encodeToString(RGBArraySerializer, color)
+        val decoded = json.decodeFromString(RGBArraySerializer, encoded)
 
         assertEquals("[18,52,86]", encoded)
         assertEquals(color, decoded)
@@ -83,8 +81,8 @@ class AdventureSerializersTest {
     fun argbLikeIntSerializerRoundTrips() {
         val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
 
-        val encoded = json.encodeToString(ARGBLikeIntSerializer, color)
-        val decoded = json.decodeFromString(ARGBLikeIntSerializer, encoded)
+        val encoded = json.encodeToString(ARGBIntSerializer, color)
+        val decoded = json.decodeFromString(ARGBIntSerializer, encoded)
 
         assertEquals("2014458966", encoded)
         assertEquals(color, decoded)
@@ -94,8 +92,8 @@ class AdventureSerializersTest {
     fun argbLikeHexSerializerRoundTrips() {
         val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
 
-        val encoded = json.encodeToString(ARGBLikeHexSerializer, color)
-        val decoded = json.decodeFromString(ARGBLikeHexSerializer, encoded)
+        val encoded = json.encodeToString(ARGBHexSerializer, color)
+        val decoded = json.decodeFromString(ARGBHexSerializer, encoded)
 
         assertEquals("\"#12345678\"", encoded)
         assertEquals(color, decoded)
@@ -105,8 +103,8 @@ class AdventureSerializersTest {
     fun argbLikeArraySerializerRoundTrips() {
         val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
 
-        val encoded = json.encodeToString(ARGBLikeArraySerializer, color)
-        val decoded = json.decodeFromString(ARGBLikeArraySerializer, encoded)
+        val encoded = json.encodeToString(ARGBArraySerializer, color)
+        val decoded = json.decodeFromString(ARGBArraySerializer, encoded)
 
         assertEquals("[18,52,86,120]", encoded)
         assertEquals(color, decoded)
@@ -115,14 +113,14 @@ class AdventureSerializersTest {
     @Test
     fun rgbLikeHexSerializerRejectsInvalidHex() {
         assertFailsWith<SerializationException> {
-            json.decodeFromString(RGBLikeHexSerializer, "\"#12345\"")
+            json.decodeFromString(RGBHexSerializer, "\"#12345\"")
         }
     }
 
     @Test
     fun argbLikeArraySerializerRejectsMissingAlpha() {
         assertFailsWith<SerializationException> {
-            json.decodeFromString(ARGBLikeArraySerializer, "[18,52,86]")
+            json.decodeFromString(ARGBArraySerializer, "[18,52,86]")
         }
     }
 }
