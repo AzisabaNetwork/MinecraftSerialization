@@ -45,11 +45,7 @@ sealed interface IntProvider {
 
     @Serializable
     @SerialName("Clamped")
-    data class Clamped(
-        val source: IntProvider,
-        val minInclusive: Int,
-        val maxInclusive: Int,
-    ) : IntProvider {
+    data class Clamped(val source: IntProvider, val minInclusive: Int, val maxInclusive: Int) : IntProvider {
         init {
             require(maxInclusive >= minInclusive) {
                 "maxInclusive must be greater than or equal to minInclusive: [$minInclusive, $maxInclusive]"
@@ -62,10 +58,7 @@ sealed interface IntProvider {
     @Serializable
     @SerialName("ClampedNormal")
     data class ClampedNormal(
-        val mean: Float,
-        val deviation: Float,
-        val minInclusive: Int,
-        val maxInclusive: Int,
+        val mean: Float, val deviation: Float, val minInclusive: Int, val maxInclusive: Int,
     ) : IntProvider {
         init {
             require(maxInclusive >= minInclusive) {
