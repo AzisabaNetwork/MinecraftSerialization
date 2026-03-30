@@ -33,7 +33,7 @@ configure(subprojects.filter { it.childProjects.isEmpty() }) {
     }
 
     configure<JavaPluginExtension> {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     configure<PublishingExtension> {

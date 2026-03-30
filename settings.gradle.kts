@@ -5,4 +5,5 @@ rootProject.name = "minecraft-serialization"
 
 include("modules:adventure")
 include("modules:joml")
+include("modules:paper")
 include("modules:value-providers")
