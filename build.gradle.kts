@@ -11,7 +11,9 @@ version = System.getenv("VERSION") ?: "0.0.0-SNAPSHOT"
 
 val kotlinx = libs.kotlinx
 
-configure(subprojects.filter { it.childProjects.isEmpty() }) {
+val leafProjects = subprojects.filter { it.childProjects.isEmpty() }
+
+configure(leafProjects) {
     group = rootProject.group
     version = rootProject.version
 
@@ -48,7 +50,7 @@ configure(subprojects.filter { it.childProjects.isEmpty() }) {
         repositories {
             maven {
                 name = "azisaba"
-                url = if (version.toString().contains("SNAPSHOT")) {
+                url = if (version.toString().endsWith("SNAPSHOT")) {
                     uri("https://repo.azisaba.net/repository/maven-snapshots/")
                 } else {
                     uri("https://repo.azisaba.net/repository/maven-releases/")
@@ -60,4 +62,10 @@ configure(subprojects.filter { it.childProjects.isEmpty() }) {
             }
         }
     }
+}
+
+tasks.register("publishAll") {
+    dependsOn(
+        leafProjects.map { it.tasks.named("publish") }
+    )
 }
