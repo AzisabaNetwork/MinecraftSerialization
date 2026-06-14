@@ -20,7 +20,7 @@ private val listSerializer: KSerializer<List<String>> = ListSerializer(String.se
 /**
  * A serializer implementation for [RegistryKeySet].
  *
- * The serialized form is a list of namespaced keys.
+ * The serialized form is a list of keys.
  *
  * ```json
  * [

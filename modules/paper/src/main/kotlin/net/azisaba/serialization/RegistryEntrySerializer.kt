@@ -14,7 +14,7 @@ import org.jetbrains.annotations.ApiStatus
 /**
  * A serializer implementation for [Keyed].
  *
- * The serialized form is the entry's namespaced key.
+ * The serialized form is the entry's key.
  *
  * ```json
  * "minecraft:stone"
