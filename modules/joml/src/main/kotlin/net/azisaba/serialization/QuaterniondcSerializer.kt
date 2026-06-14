@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Quaterniond
 import org.joml.Quaterniondc
 
+/**
+ * A serializer implementation for [Quaterniondc].
+ *
+ * The serialized form is a four-element list of double-precision x, y, z, and w components.
+ *
+ * ```json
+ * [0.0, 0.0, 0.0, 1.0]
+ * ```
+ *
+ * @see Quaterniondc
+ */
 @OptIn(InternalSerializationApi::class)
 object QuaterniondcSerializer : KSerializer<Quaterniondc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Quaterniondc", StructureKind.LIST)

@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Vector3d
 import org.joml.Vector3dc
 
+/**
+ * A serializer implementation for [Vector3dc].
+ *
+ * The serialized form is a three-element list of double-precision x, y, and z components.
+ *
+ * ```json
+ * [1.25, 2.5, 3.75]
+ * ```
+ *
+ * @see Vector3dc
+ */
 @OptIn(InternalSerializationApi::class)
 object Vector3dcSerializer : KSerializer<Vector3dc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector3dc", StructureKind.LIST)

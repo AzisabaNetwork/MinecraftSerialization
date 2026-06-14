@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Vector4f
 import org.joml.Vector4fc
 
+/**
+ * A serializer implementation for [Vector4fc].
+ *
+ * The serialized form is a four-element list of single-precision x, y, z, and w components.
+ *
+ * ```json
+ * [1.25, 2.5, 3.75, 4.0]
+ * ```
+ *
+ * @see Vector4fc
+ */
 @OptIn(InternalSerializationApi::class)
 object Vector4fcSerializer : KSerializer<Vector4fc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector4fc", StructureKind.LIST)

@@ -1,3 +1,5 @@
+import net.azisaba.gradle.GenerateRegistrySerializers
+
 repositories {
     maven {
         name = "papermc"
@@ -6,5 +8,22 @@ repositories {
 }
 
 dependencies {
+    api(project(":modules:adventure"))
     compileOnly(libs.paper.api)
+
+    testImplementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.paper.api)
+}
+
+val generatedRegistrySerializersDir = layout.buildDirectory.dir("generated/sources/registrySerializers/kotlin")
+
+val generateRegistrySerializers by tasks.registering(GenerateRegistrySerializers::class) {
+    classpath.from(configurations.compileClasspath)
+    outputDirectory.set(generatedRegistrySerializersDir)
+}
+
+kotlin {
+    sourceSets.named("main") {
+        kotlin.srcDir(generateRegistrySerializers)
+    }
 }

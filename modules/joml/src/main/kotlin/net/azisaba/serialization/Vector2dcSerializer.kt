@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Vector2d
 import org.joml.Vector2dc
 
+/**
+ * A serializer implementation for [Vector2dc].
+ *
+ * The serialized form is a two-element list of double-precision x and y components.
+ *
+ * ```json
+ * [1.25, 2.5]
+ * ```
+ *
+ * @see Vector2dc
+ */
 @OptIn(InternalSerializationApi::class)
 object Vector2dcSerializer : KSerializer<Vector2dc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector2dc", StructureKind.LIST)

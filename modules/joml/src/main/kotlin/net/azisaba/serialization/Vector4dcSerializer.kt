@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Vector4d
 import org.joml.Vector4dc
 
+/**
+ * A serializer implementation for [Vector4dc].
+ *
+ * The serialized form is a four-element list of double-precision x, y, z, and w components.
+ *
+ * ```json
+ * [1.25, 2.5, 3.75, 4.0]
+ * ```
+ *
+ * @see Vector4dc
+ */
 @OptIn(InternalSerializationApi::class)
 object Vector4dcSerializer : KSerializer<Vector4dc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector4dc", StructureKind.LIST)

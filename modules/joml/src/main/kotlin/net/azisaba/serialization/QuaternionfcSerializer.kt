@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Quaternionf
 import org.joml.Quaternionfc
 
+/**
+ * A serializer implementation for [Quaternionfc].
+ *
+ * The serialized form is a four-element list of single-precision x, y, z, and w components.
+ *
+ * ```json
+ * [0.0, 0.0, 0.0, 1.0]
+ * ```
+ *
+ * @see Quaternionfc
+ */
 @OptIn(InternalSerializationApi::class)
 object QuaternionfcSerializer : KSerializer<Quaternionfc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Quaternionfc", StructureKind.LIST)

@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Vector2f
 import org.joml.Vector2fc
 
+/**
+ * A serializer implementation for [Vector2fc].
+ *
+ * The serialized form is a two-element list of single-precision x and y components.
+ *
+ * ```json
+ * [1.25, 2.5]
+ * ```
+ *
+ * @see Vector2fc
+ */
 @OptIn(InternalSerializationApi::class)
 object Vector2fcSerializer : KSerializer<Vector2fc> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector2fc", StructureKind.LIST)

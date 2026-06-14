@@ -13,6 +13,17 @@ import kotlinx.serialization.encoding.decodeStructure
 import org.joml.Vector4i
 import org.joml.Vector4ic
 
+/**
+ * A serializer implementation for [Vector4ic].
+ *
+ * The serialized form is a four-element list of integer x, y, z, and w components.
+ *
+ * ```json
+ * [1, 2, 3, 4]
+ * ```
+ *
+ * @see Vector4ic
+ */
 @OptIn(InternalSerializationApi::class)
 object Vector4icSerializer : KSerializer<Vector4ic> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector4ic", StructureKind.LIST)

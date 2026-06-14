@@ -9,18 +9,27 @@ import kotlinx.serialization.encoding.Encoder
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 
-object ComponentMiniMessageSerializer : KSerializer<Component> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ComponentMiniMessage", PrimitiveKind.STRING)
+/**
+ * A serializer implementation for [Component].
+ *
+ * The serialized form is a MiniMessage string.
+ *
+ * ```json
+ * "<red>Hello</red>"
+ * ```
+ *
+ * @see Component
+ */
+object ComponentSerializer : KSerializer<Component> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Component", PrimitiveKind.STRING)
 
     private val miniMessage: MiniMessage = MiniMessage.miniMessage()
 
     override fun serialize(encoder: Encoder, value: Component) {
-        val string = miniMessage.serialize(value)
-        encoder.encodeString(string)
+        encoder.encodeString(miniMessage.serialize(value))
     }
 
     override fun deserialize(decoder: Decoder): Component {
-        val string = decoder.decodeString()
-        return miniMessage.deserialize(string)
+        return miniMessage.deserialize(decoder.decodeString())
     }
 }

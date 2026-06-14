@@ -3,6 +3,7 @@ package net.azisaba.serialization
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.text.format.TextColor
@@ -12,19 +13,6 @@ import kotlin.test.assertFailsWith
 
 class AdventureSerializersTest {
     private val json = Json
-
-    private fun assertRgbEquals(expected: TextColor, actual: net.kyori.adventure.util.RGBLike) {
-        assertEquals(expected.red(), actual.red())
-        assertEquals(expected.green(), actual.green())
-        assertEquals(expected.blue(), actual.blue())
-    }
-
-    private fun assertArgbEquals(expected: ShadowColor, actual: net.kyori.adventure.util.ARGBLike) {
-        assertEquals(expected.red(), actual.red())
-        assertEquals(expected.green(), actual.green())
-        assertEquals(expected.blue(), actual.blue())
-        assertEquals(expected.alpha(), actual.alpha())
-    }
 
     @Test
     fun keySerializerRoundTrips() {
@@ -38,120 +26,125 @@ class AdventureSerializersTest {
     }
 
     @Test
-    fun componentJsonSerializerRoundTrips() {
+    fun componentSerializerRoundTripsMiniMessage() {
+        val component = Component.text("hello")
+
+        val encoded = json.encodeToString(ComponentSerializer, component)
+        val decoded = json.decodeFromString(ComponentSerializer, encoded)
+
+        assertEquals("\"hello\"", encoded)
+        assertEquals(component, decoded)
+    }
+
+    @Test
+    fun componentSerializerPreservesFormatting() {
         val component = Component.text("hello").color(TextColor.color(0x12, 0x34, 0x56))
 
-        val encoded = json.encodeToString(ComponentJsonSerializer, component)
-        val decoded = json.decodeFromString(ComponentJsonSerializer, encoded)
+        val decoded = json.decodeFromString(
+            ComponentSerializer,
+            json.encodeToString(ComponentSerializer, component),
+        )
 
         assertEquals(component, decoded)
     }
 
     @Test
-    fun componentMiniMessageSerializerRoundTrips() {
-        val serializer = ComponentMiniMessageSerializer
-        val encoded = json.encodeToString(serializer, Component.text("hello"))
-        val decoded = json.decodeFromString(serializer, encoded)
-
-        assertEquals(Component.text("hello"), decoded)
-        assertEquals("\"hello\"", encoded)
-    }
-
-    @Test
-    fun rgbLikeIntSerializerRoundTrips() {
+    fun textColorSerializerRoundTripsHex() {
         val color = TextColor.color(0x12, 0x34, 0x56)
 
-        val encoded = json.encodeToString(RGBIntSerializer, color)
-        val decoded = json.decodeFromString(RGBIntSerializer, encoded)
-
-        assertEquals("1193046", encoded)
-        assertRgbEquals(color, decoded)
-    }
-
-    @Test
-    fun rgbLikeHexSerializerRoundTrips() {
-        val color = TextColor.color(0x12, 0x34, 0x56)
-
-        val encoded = json.encodeToString(RGBHexSerializer, color)
-        val decoded = json.decodeFromString(RGBHexSerializer, encoded)
+        val encoded = json.encodeToString(TextColorSerializer, color)
+        val decoded = json.decodeFromString(TextColorSerializer, encoded)
 
         assertEquals("\"#123456\"", encoded)
-        assertRgbEquals(color, decoded)
+        assertEquals(color, decoded)
     }
 
     @Test
-    fun rgbLikeArraySerializerRoundTrips() {
-        val color = TextColor.color(0x12, 0x34, 0x56)
+    fun textColorSerializerDeserializesShortHex() {
+        val color = TextColor.color(0x000123)
 
-        val encoded = json.encodeToString(RGBArraySerializer, color)
-        val decoded = json.decodeFromString(RGBArraySerializer, encoded)
-
-        assertEquals("[18,52,86]", encoded)
-        assertRgbEquals(color, decoded)
+        assertEquals(color, json.decodeFromString(TextColorSerializer, "\"#123\""))
     }
 
     @Test
-    fun textColorSerializersRoundTrip() {
-        val color = TextColor.color(0x12, 0x34, 0x56)
-
-        assertEquals(color, json.decodeFromString(TextColorIntSerializer, json.encodeToString(TextColorIntSerializer, color)))
-        assertEquals(color, json.decodeFromString(TextColorHexSerializer, json.encodeToString(TextColorHexSerializer, color)))
-        assertEquals(color, json.decodeFromString(TextColorArraySerializer, json.encodeToString(TextColorArraySerializer, color)))
-    }
-
-    @Test
-    fun argbLikeIntSerializerRoundTrips() {
-        val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
-
-        val encoded = json.encodeToString(ARGBIntSerializer, color)
-        val decoded = json.decodeFromString(ARGBIntSerializer, encoded)
-
-        assertEquals("2014458966", encoded)
-        assertArgbEquals(color, decoded)
-    }
-
-    @Test
-    fun argbLikeHexSerializerRoundTrips() {
-        val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
-
-        val encoded = json.encodeToString(ARGBHexSerializer, color)
-        val decoded = json.decodeFromString(ARGBHexSerializer, encoded)
-
-        assertEquals("\"#12345678\"", encoded)
-        assertArgbEquals(color, decoded)
-    }
-
-    @Test
-    fun argbLikeArraySerializerRoundTrips() {
-        val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
-
-        val encoded = json.encodeToString(ARGBArraySerializer, color)
-        val decoded = json.decodeFromString(ARGBArraySerializer, encoded)
-
-        assertEquals("[18,52,86,120]", encoded)
-        assertArgbEquals(color, decoded)
-    }
-
-    @Test
-    fun shadowColorSerializersRoundTrip() {
-        val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
-
-        assertEquals(color, json.decodeFromString(ShadowColorIntSerializer, json.encodeToString(ShadowColorIntSerializer, color)))
-        assertEquals(color, json.decodeFromString(ShadowColorHexSerializer, json.encodeToString(ShadowColorHexSerializer, color)))
-        assertEquals(color, json.decodeFromString(ShadowColorArraySerializer, json.encodeToString(ShadowColorArraySerializer, color)))
-    }
-
-    @Test
-    fun rgbLikeHexSerializerRejectsInvalidHex() {
+    fun textColorSerializerRejectsInvalidHex() {
         assertFailsWith<SerializationException> {
-            json.decodeFromString(RGBHexSerializer, "\"#12345\"")
+            json.decodeFromString(TextColorSerializer, "\"#nothex\"")
         }
     }
 
     @Test
-    fun argbLikeArraySerializerRejectsMissingAlpha() {
+    fun shadowColorSerializerRoundTripsHex() {
+        val color = ShadowColor.shadowColor(0x12, 0x34, 0x56, 0x78)
+
+        val encoded = json.encodeToString(ShadowColorSerializer, color)
+        val decoded = json.decodeFromString(ShadowColorSerializer, encoded)
+
+        assertEquals("\"#12345678\"", encoded)
+        assertEquals(color, decoded)
+    }
+
+    @Test
+    fun shadowColorSerializerRejectsMissingAlpha() {
         assertFailsWith<SerializationException> {
-            json.decodeFromString(ARGBArraySerializer, "[18,52,86]")
+            json.decodeFromString(ShadowColorSerializer, "\"#123456\"")
+        }
+    }
+
+    @Test
+    fun soundSourceSerializerRoundTrips() {
+        val encoded = json.encodeToString(SoundSourceSerializer, Sound.Source.RECORD)
+        val decoded = json.decodeFromString(SoundSourceSerializer, encoded)
+
+        assertEquals("\"record\"", encoded)
+        assertEquals(Sound.Source.RECORD, decoded)
+    }
+
+    @Test
+    fun soundSourceSerializerRejectsUnknownSource() {
+        assertFailsWith<SerializationException> {
+            json.decodeFromString(SoundSourceSerializer, "\"unknown\"")
+        }
+    }
+
+    @Test
+    fun soundSerializerRoundTrips() {
+        val sound = Sound.sound(
+            Key.key("minecraft", "block.note_block.harp"),
+            Sound.Source.MUSIC,
+            0.75f,
+            1.25f,
+        )
+
+        val encoded = json.encodeToString(SoundSerializer, sound)
+        val decoded = json.decodeFromString(SoundSerializer, encoded)
+
+        assertEquals(
+            """{"type":"minecraft:block.note_block.harp","source":"music","volume":0.75,"pitch":1.25}""",
+            encoded,
+        )
+        assertEquals(sound.name(), decoded.name())
+        assertEquals(sound.source(), decoded.source())
+        assertEquals(sound.volume(), decoded.volume())
+        assertEquals(sound.pitch(), decoded.pitch())
+    }
+
+    @Test
+    fun soundSerializerUsesDefaultsForOptionalFields() {
+        val decoded = json.decodeFromString(
+            SoundSerializer,
+            """{"type":"minecraft:block.note_block.harp"}""",
+        )
+
+        assertEquals(Sound.Source.MASTER, decoded.source())
+        assertEquals(1.0f, decoded.volume())
+        assertEquals(1.0f, decoded.pitch())
+    }
+
+    @Test
+    fun soundSerializerRequiresType() {
+        assertFailsWith<SerializationException> {
+            json.decodeFromString(SoundSerializer, "{}")
         }
     }
 }

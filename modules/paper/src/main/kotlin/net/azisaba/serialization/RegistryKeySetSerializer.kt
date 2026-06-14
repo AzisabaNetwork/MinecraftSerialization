@@ -2,8 +2,8 @@ package net.azisaba.serialization
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
+import io.papermc.paper.registry.set.RegistryKeySet
 import io.papermc.paper.registry.set.RegistrySet
-import io.papermc.paper.registry.set.RegistryValueSet
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -18,7 +18,7 @@ private const val TAG_PREFIX: Char = '#'
 private val listSerializer: KSerializer<List<String>> = ListSerializer(String.serializer())
 
 /**
- * A serializer implementation for [RegistryValueSet].
+ * A serializer implementation for [RegistryKeySet].
  *
  * The serialized form is a list of namespaced keys.
  *
@@ -30,35 +30,34 @@ private val listSerializer: KSerializer<List<String>> = ListSerializer(String.se
  * ```
  *
  * @param T registry entry type
- * @see RegistryValueSet
+ * @see RegistryKeySet
  * @see RegistryKey
  */
 @ApiStatus.Internal
-abstract class RegistryValueSetSerializer<T : Keyed>(
+abstract class RegistryKeySetSerializer<T : Keyed>(
     val registryKey: RegistryKey<T>,
-) : KSerializer<RegistryValueSet<T>> {
+) : KSerializer<RegistryKeySet<T>> {
     override val descriptor: SerialDescriptor = listSerializer.descriptor
 
-    override fun serialize(encoder: Encoder, value: RegistryValueSet<T>) {
+    override fun serialize(encoder: Encoder, value: RegistryKeySet<T>) {
         encoder.encodeSerializableValue(listSerializer, value.values().map { it.key().asString() })
     }
 
-    override fun deserialize(decoder: Decoder): RegistryValueSet<T> {
+    override fun deserialize(decoder: Decoder): RegistryKeySet<T> {
         val registry = RegistryAccess.registryAccess().getRegistry(registryKey)
 
         val list = decoder.decodeSerializableValue(listSerializer)
-        val values = buildSet {
+        val keys = buildSet {
             for (element in list) {
                 if (element.startsWith(TAG_PREFIX)) {
                     val tagKey = registryKey.tagKey(element.substring(1))
-                    addAll(registry.getTagValues(tagKey))
+                    addAll(registry.getTag(tagKey).values())
                 } else {
-                    val typedKey = registryKey.typedKey(element)
-                    add(registry.getOrThrow(typedKey))
+                    add(registryKey.typedKey(element))
                 }
             }
         }
 
-        return RegistrySet.valueSet(registryKey, values)
+        return RegistrySet.keySet(registryKey, keys)
     }
 }

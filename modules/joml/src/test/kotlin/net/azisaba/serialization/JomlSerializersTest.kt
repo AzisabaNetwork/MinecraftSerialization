@@ -2,6 +2,7 @@ package net.azisaba.serialization
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.joml.Quaterniond
 import org.joml.Quaternionf
@@ -16,6 +17,7 @@ import org.joml.Vector4f
 import org.joml.Vector4i
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class JomlSerializersTest {
     private val json = Json
@@ -152,5 +154,33 @@ class JomlSerializersTest {
         assertEquals(value.y(), decoded.y())
         assertEquals(value.z(), decoded.z())
         assertEquals(value.w(), decoded.w())
+    }
+
+    @Test
+    fun vectorSerializerRejectsMissingComponents() {
+        assertFailsWith<SerializationException> {
+            json.decodeFromString(Vector3fcSerializer, "[1.0,2.0]")
+        }
+    }
+
+    @Test
+    fun vectorSerializerRejectsExtraComponents() {
+        assertFailsWith<SerializationException> {
+            json.decodeFromString(Vector2icSerializer, "[1,2,3]")
+        }
+    }
+
+    @Test
+    fun quaternionSerializerRejectsMissingComponents() {
+        assertFailsWith<SerializationException> {
+            json.decodeFromString(QuaterniondcSerializer, "[0.0,0.0,0.0]")
+        }
+    }
+
+    @Test
+    fun quaternionSerializerRejectsExtraComponents() {
+        assertFailsWith<SerializationException> {
+            json.decodeFromString(QuaternionfcSerializer, "[0.0,0.0,0.0,1.0,2.0]")
+        }
     }
 }
