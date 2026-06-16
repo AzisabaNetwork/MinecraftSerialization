@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     api(project(":modules:adventure"))
+    api(project(":modules:joml"))
     compileOnly(libs.paper.api)
 
     testImplementation(libs.kotlinx.serialization.json)
