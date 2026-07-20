@@ -41,30 +41,30 @@ object SoundSerializer : KSerializer<Sound> {
     }
 
     override fun deserialize(decoder: Decoder): Sound {
-        var type: Key? = null
-        var source = Sound.Source.MASTER
-        var volume = 1.0f
-        var pitch = 1.0f
+        return decoder.decodeStructure(descriptor) {
+            var type: Key? = null
+            var source = Sound.Source.MASTER
+            var volume = 1.0f
+            var pitch = 1.0f
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> type = decodeSerializableElement(descriptor, 0, KeySerializer)
-                    1 -> source = decodeSerializableElement(descriptor, 1, SoundSourceSerializer)
-                    2 -> volume = decodeFloatElement(descriptor, 2)
-                    3 -> pitch = decodeFloatElement(descriptor, 3)
+                    0 -> type = decodeSerializableElement(descriptor, index, KeySerializer)
+                    1 -> source = decodeSerializableElement(descriptor, index, SoundSourceSerializer)
+                    2 -> volume = decodeFloatElement(descriptor, index)
+                    3 -> pitch = decodeFloatElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
                     else -> throw SerializationException("Unexpected index: $index")
                 }
             }
-        }
 
-        return Sound.sound()
-            .type(type ?: throw SerializationException("type cannot be null"))
-            .source(source)
-            .volume(volume)
-            .pitch(pitch)
-            .build()
+            Sound.sound()
+                .type(type ?: throw SerializationException("Sound must contain type"))
+                .source(source)
+                .volume(volume)
+                .pitch(pitch)
+                .build()
+        }
     }
 }
 

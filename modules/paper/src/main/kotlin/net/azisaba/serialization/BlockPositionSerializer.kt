@@ -7,11 +7,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
-import kotlinx.serialization.encoding.encodeStructure
+import kotlinx.serialization.encoding.*
 
 /**
  * A serializer implementation for [BlockPosition].
@@ -44,26 +40,26 @@ object BlockPositionSerializer : KSerializer<BlockPosition> {
     }
 
     override fun deserialize(decoder: Decoder): BlockPosition {
-        var x: Int? = null
-        var y: Int? = null
-        var z: Int? = null
+        return decoder.decodeStructure(descriptor) {
+            var x: Int? = null
+            var y: Int? = null
+            var z: Int? = null
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> x = decodeIntElement(descriptor, 0)
-                    1 -> y = decodeIntElement(descriptor, 1)
-                    2 -> z = decodeIntElement(descriptor, 2)
+                    0 -> x = decodeIntElement(descriptor, index)
+                    1 -> y = decodeIntElement(descriptor, index)
+                    2 -> z = decodeIntElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> error("Unexpected index: $index")
+                    else -> throw SerializationException("Unexpected index: $index")
                 }
             }
-        }
 
-        return Position.block(
-            x ?: throw SerializationException("x cannot be null"),
-            y ?: throw SerializationException("y cannot be null"),
-            z ?: throw SerializationException("z cannot be null"),
-        )
+            Position.block(
+                x ?: throw SerializationException("BlockPosition must contain x"),
+                y ?: throw SerializationException("BlockPosition must contain y"),
+                z ?: throw SerializationException("BlockPosition must contain z"),
+            )
+        }
     }
 }

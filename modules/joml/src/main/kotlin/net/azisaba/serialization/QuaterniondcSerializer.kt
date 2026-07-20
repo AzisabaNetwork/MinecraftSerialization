@@ -3,8 +3,8 @@ package net.azisaba.serialization
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
@@ -38,29 +38,29 @@ object QuaterniondcSerializer : KSerializer<Quaterniondc> {
     }
 
     override fun deserialize(decoder: Decoder): Quaterniondc {
-        var x: Double? = null
-        var y: Double? = null
-        var z: Double? = null
-        var w: Double? = null
+        return decoder.decodeStructure(descriptor) {
+            var x: Double? = null
+            var y: Double? = null
+            var z: Double? = null
+            var w: Double? = null
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> x = decodeDoubleElement(descriptor, 0)
-                    1 -> y = decodeDoubleElement(descriptor, 1)
-                    2 -> z = decodeDoubleElement(descriptor, 2)
-                    3 -> w = decodeDoubleElement(descriptor, 3)
+                    0 -> x = decodeDoubleElement(descriptor, index)
+                    1 -> y = decodeDoubleElement(descriptor, index)
+                    2 -> z = decodeDoubleElement(descriptor, index)
+                    3 -> w = decodeDoubleElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> throw SerializationException("Quaterniondc index must be between 0 and 3, got: $index")
+                    else -> throw SerializationException("Unexpected index: $index")
                 }
             }
-        }
 
-        return Quaterniond(
-            x ?: throw SerializationException("Quaterniondc must contain x"),
-            y ?: throw SerializationException("Quaterniondc must contain y"),
-            z ?: throw SerializationException("Quaterniondc must contain z"),
-            w ?: throw SerializationException("Quaterniondc must contain w"),
-        )
+            Quaterniond(
+                x ?: throw SerializationException("Quaterniondc must contain x"),
+                y ?: throw SerializationException("Quaterniondc must contain y"),
+                z ?: throw SerializationException("Quaterniondc must contain z"),
+                w ?: throw SerializationException("Quaterniondc must contain w"),
+            )
+        }
     }
 }

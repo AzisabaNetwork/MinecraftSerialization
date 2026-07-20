@@ -37,26 +37,26 @@ object Vector3icSerializer : KSerializer<Vector3ic> {
     }
 
     override fun deserialize(decoder: Decoder): Vector3ic {
-        var x: Int? = null
-        var y: Int? = null
-        var z: Int? = null
+        return decoder.decodeStructure(descriptor) {
+            var x: Int? = null
+            var y: Int? = null
+            var z: Int? = null
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> x = decodeIntElement(descriptor, 0)
-                    1 -> y = decodeIntElement(descriptor, 1)
-                    2 -> z = decodeIntElement(descriptor, 2)
+                    0 -> x = decodeIntElement(descriptor, index)
+                    1 -> y = decodeIntElement(descriptor, index)
+                    2 -> z = decodeIntElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> throw SerializationException("Vector3ic index must be between 0 and 2, got: $index")
+                    else -> throw SerializationException("Unexpected index: $index")
                 }
             }
-        }
 
-        return Vector3i(
-            x ?: throw SerializationException("Vector3ic must contain x"),
-            y ?: throw SerializationException("Vector3ic must contain y"),
-            z ?: throw SerializationException("Vector3ic must contain z"),
-        )
+            Vector3i(
+                x ?: throw SerializationException("Vector3ic must contain x"),
+                y ?: throw SerializationException("Vector3ic must contain y"),
+                z ?: throw SerializationException("Vector3ic must contain z"),
+            )
+        }
     }
 }

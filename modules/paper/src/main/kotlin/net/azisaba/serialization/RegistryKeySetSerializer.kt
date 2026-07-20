@@ -33,7 +33,7 @@ private val listSerializer: KSerializer<List<String>> = ListSerializer(String.se
  * @see RegistryKeySet
  * @see RegistryKey
  */
-@ApiStatus.Internal
+@ApiStatus.NonExtendable
 abstract class RegistryKeySetSerializer<T : Keyed>(
     val registryKey: RegistryKey<T>,
 ) : KSerializer<RegistryKeySet<T>> {

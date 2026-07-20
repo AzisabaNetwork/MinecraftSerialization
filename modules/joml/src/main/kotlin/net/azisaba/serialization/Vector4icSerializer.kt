@@ -38,29 +38,29 @@ object Vector4icSerializer : KSerializer<Vector4ic> {
     }
 
     override fun deserialize(decoder: Decoder): Vector4ic {
-        var x: Int? = null
-        var y: Int? = null
-        var z: Int? = null
-        var w: Int? = null
+        return decoder.decodeStructure(descriptor) {
+            var x: Int? = null
+            var y: Int? = null
+            var z: Int? = null
+            var w: Int? = null
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> x = decodeIntElement(descriptor, 0)
-                    1 -> y = decodeIntElement(descriptor, 1)
-                    2 -> z = decodeIntElement(descriptor, 2)
-                    3 -> w = decodeIntElement(descriptor, 3)
+                    0 -> x = decodeIntElement(descriptor, index)
+                    1 -> y = decodeIntElement(descriptor, index)
+                    2 -> z = decodeIntElement(descriptor, index)
+                    3 -> w = decodeIntElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> throw SerializationException("Vector4ic index must be between 0 and 3, got: $index")
+                    else -> throw SerializationException("Unexpected index: $index")
                 }
             }
-        }
 
-        return Vector4i(
-            x ?: throw SerializationException("Vector4ic must contain x"),
-            y ?: throw SerializationException("Vector4ic must contain y"),
-            z ?: throw SerializationException("Vector4ic must contain z"),
-            w ?: throw SerializationException("Vector4ic must contain w"),
-        )
+            Vector4i(
+                x ?: throw SerializationException("Vector4ic must contain x"),
+                y ?: throw SerializationException("Vector4ic must contain y"),
+                z ?: throw SerializationException("Vector4ic must contain z"),
+                w ?: throw SerializationException("Vector4ic must contain w"),
+            )
+        }
     }
 }

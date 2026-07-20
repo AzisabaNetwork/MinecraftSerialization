@@ -44,26 +44,26 @@ object FinePositionSerializer : KSerializer<FinePosition> {
     }
 
     override fun deserialize(decoder: Decoder): FinePosition {
-        var x: Double? = null
-        var y: Double? = null
-        var z: Double? = null
+        return decoder.decodeStructure(descriptor) {
+            var x: Double? = null
+            var y: Double? = null
+            var z: Double? = null
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> x = decodeDoubleElement(descriptor, 0)
-                    1 -> y = decodeDoubleElement(descriptor, 1)
-                    2 -> z = decodeDoubleElement(descriptor, 2)
+                    0 -> x = decodeDoubleElement(descriptor, index)
+                    1 -> y = decodeDoubleElement(descriptor, index)
+                    2 -> z = decodeDoubleElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> throw SerializationException("Unexcepted index: $index")
+                    else -> throw SerializationException("Unexpected index: $index")
                 }
             }
-        }
 
-        return Position.fine(
-            x ?: throw SerializationException("x cannot be null"),
-            y ?: throw SerializationException("y cannot be null"),
-            z ?: throw SerializationException("z cannot be null"),
-        )
+            Position.fine(
+                x ?: throw SerializationException("FinePosition must contain x"),
+                y ?: throw SerializationException("FinePosition must contain y"),
+                z ?: throw SerializationException("FinePosition must contain z"),
+            )
+        }
     }
 }

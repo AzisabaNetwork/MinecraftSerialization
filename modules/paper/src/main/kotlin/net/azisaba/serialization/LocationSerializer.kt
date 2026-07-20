@@ -5,11 +5,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
-import kotlinx.serialization.encoding.encodeStructure
+import kotlinx.serialization.encoding.*
 import net.kyori.adventure.key.Key
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -48,12 +44,12 @@ object LocationSerializer : KSerializer<Location> {
     }
 
     override fun deserialize(decoder: Decoder): Location {
-        var worldKey: Key? = null
-        var x: Double? = null
-        var y: Double? = null
-        var z: Double? = null
+        return decoder.decodeStructure(descriptor) {
+            var worldKey: Key? = null
+            var x: Double? = null
+            var y: Double? = null
+            var z: Double? = null
 
-        decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
                     0 -> worldKey = decodeSerializableElement(descriptor, 0, KeySerializer)
@@ -61,20 +57,20 @@ object LocationSerializer : KSerializer<Location> {
                     2 -> y = decodeDoubleElement(descriptor, 2)
                     3 -> z = decodeDoubleElement(descriptor, 3)
                     CompositeDecoder.DECODE_DONE -> break
-                    else -> error("Unexpected index: $index")
+                    else -> throw SerializationException("Unexpected index: $index")
                 }
             }
+
+            val world = Bukkit.getWorld(
+                worldKey ?: throw SerializationException("Location must contain world")
+            ) ?: throw SerializationException("World $worldKey is not loaded")
+
+            Location(
+                world,
+                x ?: throw SerializationException("Location must contain x"),
+                y ?: throw SerializationException("Location must contain y"),
+                z ?: throw SerializationException("Location must contain z"),
+            )
         }
-
-        val world = Bukkit.getWorld(
-            worldKey ?: throw SerializationException("world cannot be null")
-        ) ?: throw SerializationException("World $worldKey is not loaded")
-
-        return Location(
-            world,
-            x ?: throw SerializationException("x cannot be null"),
-            y ?: throw SerializationException("y cannot be null"),
-            z ?: throw SerializationException("z cannot be null"),
-        )
     }
 }

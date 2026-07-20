@@ -24,7 +24,7 @@ import org.jetbrains.annotations.ApiStatus
  * @see Keyed
  * @see RegistryKey
  */
-@ApiStatus.Internal
+@ApiStatus.NonExtendable
 abstract class RegistryEntrySerializer<T : Keyed>(
     name: String, val registryKey: RegistryKey<T>,
 ) : KSerializer<T> {
