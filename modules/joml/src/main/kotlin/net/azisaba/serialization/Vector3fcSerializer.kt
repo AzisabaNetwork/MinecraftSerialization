@@ -3,13 +3,10 @@ package net.azisaba.serialization
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.*
 import org.joml.Vector3f
 import org.joml.Vector3fc
 
@@ -24,16 +21,16 @@ import org.joml.Vector3fc
  *
  * @see Vector3fc
  */
-@OptIn(InternalSerializationApi::class)
 object Vector3fcSerializer : KSerializer<Vector3fc> {
+    @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector3fc", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: Vector3fc) {
-        val composite = encoder.beginCollection(descriptor, 3)
-        composite.encodeFloatElement(descriptor, 0, value.x())
-        composite.encodeFloatElement(descriptor, 1, value.y())
-        composite.encodeFloatElement(descriptor, 2, value.z())
-        composite.endStructure(descriptor)
+        encoder.encodeCollection(descriptor, 3) {
+            encodeFloatElement(descriptor, 0, value.x())
+            encodeFloatElement(descriptor, 1, value.y())
+            encodeFloatElement(descriptor, 2, value.z())
+        }
     }
 
     override fun deserialize(decoder: Decoder): Vector3fc {

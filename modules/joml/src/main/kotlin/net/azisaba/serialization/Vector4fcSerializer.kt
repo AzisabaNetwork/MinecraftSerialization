@@ -6,10 +6,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.*
 import org.joml.Vector4f
 import org.joml.Vector4fc
 
@@ -24,17 +21,17 @@ import org.joml.Vector4fc
  *
  * @see Vector4fc
  */
-@OptIn(InternalSerializationApi::class)
 object Vector4fcSerializer : KSerializer<Vector4fc> {
+    @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector4fc", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: Vector4fc) {
-        val composite = encoder.beginCollection(descriptor, 4)
-        composite.encodeFloatElement(descriptor, 0, value.x())
-        composite.encodeFloatElement(descriptor, 1, value.y())
-        composite.encodeFloatElement(descriptor, 2, value.z())
-        composite.encodeFloatElement(descriptor, 3, value.w())
-        composite.endStructure(descriptor)
+        encoder.encodeCollection(descriptor, 4) {
+            encodeFloatElement(descriptor, 0, value.x())
+            encodeFloatElement(descriptor, 1, value.y())
+            encodeFloatElement(descriptor, 2, value.z())
+            encodeFloatElement(descriptor, 3, value.w())
+        }
     }
 
     override fun deserialize(decoder: Decoder): Vector4fc {

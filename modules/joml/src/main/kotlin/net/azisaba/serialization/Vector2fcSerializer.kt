@@ -3,13 +3,10 @@ package net.azisaba.serialization
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.*
 import org.joml.Vector2f
 import org.joml.Vector2fc
 
@@ -24,15 +21,15 @@ import org.joml.Vector2fc
  *
  * @see Vector2fc
  */
-@OptIn(InternalSerializationApi::class)
 object Vector2fcSerializer : KSerializer<Vector2fc> {
+    @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector2fc", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: Vector2fc) {
-        val composite = encoder.beginCollection(descriptor, 2)
-        composite.encodeFloatElement(descriptor, 0, value.x())
-        composite.encodeFloatElement(descriptor, 1, value.y())
-        composite.endStructure(descriptor)
+        encoder.encodeCollection(descriptor, 2) {
+            encodeFloatElement(descriptor, 0, value.x())
+            encodeFloatElement(descriptor, 1, value.y())
+        }
     }
 
     override fun deserialize(decoder: Decoder): Vector2fc {

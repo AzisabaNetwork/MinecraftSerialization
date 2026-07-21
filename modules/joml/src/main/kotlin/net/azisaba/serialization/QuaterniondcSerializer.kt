@@ -6,10 +6,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.*
 import org.joml.Quaterniond
 import org.joml.Quaterniondc
 
@@ -24,17 +21,17 @@ import org.joml.Quaterniondc
  *
  * @see Quaterniondc
  */
-@OptIn(InternalSerializationApi::class)
 object QuaterniondcSerializer : KSerializer<Quaterniondc> {
+    @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Quaterniondc", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: Quaterniondc) {
-        val composite = encoder.beginCollection(descriptor, 4)
-        composite.encodeDoubleElement(descriptor, 0, value.x())
-        composite.encodeDoubleElement(descriptor, 1, value.y())
-        composite.encodeDoubleElement(descriptor, 2, value.z())
-        composite.encodeDoubleElement(descriptor, 3, value.w())
-        composite.endStructure(descriptor)
+        encoder.encodeCollection(descriptor, 4) {
+            encodeDoubleElement(descriptor, 0, value.x())
+            encodeDoubleElement(descriptor, 1, value.y())
+            encodeDoubleElement(descriptor, 2, value.z())
+            encodeDoubleElement(descriptor, 3, value.w())
+        }
     }
 
     override fun deserialize(decoder: Decoder): Quaterniondc {

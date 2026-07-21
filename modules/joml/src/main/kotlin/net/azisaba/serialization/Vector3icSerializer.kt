@@ -10,6 +10,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.encodeCollection
 import org.joml.Vector3i
 import org.joml.Vector3ic
 
@@ -24,16 +25,16 @@ import org.joml.Vector3ic
  *
  * @see Vector3ic
  */
-@OptIn(InternalSerializationApi::class)
 object Vector3icSerializer : KSerializer<Vector3ic> {
+    @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Vector3ic", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: Vector3ic) {
-        val composite = encoder.beginCollection(descriptor, 3)
-        composite.encodeIntElement(descriptor, 0, value.x())
-        composite.encodeIntElement(descriptor, 1, value.y())
-        composite.encodeIntElement(descriptor, 2, value.z())
-        composite.endStructure(descriptor)
+        encoder.encodeCollection(descriptor, 3) {
+            encodeIntElement(descriptor, 0, value.x())
+            encodeIntElement(descriptor, 1, value.y())
+            encodeIntElement(descriptor, 2, value.z())
+        }
     }
 
     override fun deserialize(decoder: Decoder): Vector3ic {

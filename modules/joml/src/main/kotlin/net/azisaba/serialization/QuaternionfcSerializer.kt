@@ -3,13 +3,10 @@ package net.azisaba.serialization
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.*
 import org.joml.Quaternionf
 import org.joml.Quaternionfc
 
@@ -24,17 +21,17 @@ import org.joml.Quaternionfc
  *
  * @see Quaternionfc
  */
-@OptIn(InternalSerializationApi::class)
 object QuaternionfcSerializer : KSerializer<Quaternionfc> {
+    @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor = buildSerialDescriptor("Quaternionfc", StructureKind.LIST)
 
     override fun serialize(encoder: Encoder, value: Quaternionfc) {
-        val composite = encoder.beginCollection(descriptor, 4)
-        composite.encodeFloatElement(descriptor, 0, value.x())
-        composite.encodeFloatElement(descriptor, 1, value.y())
-        composite.encodeFloatElement(descriptor, 2, value.z())
-        composite.encodeFloatElement(descriptor, 3, value.w())
-        composite.endStructure(descriptor)
+        encoder.encodeCollection(descriptor, 4) {
+            encodeFloatElement(descriptor, 0, value.x())
+            encodeFloatElement(descriptor, 1, value.y())
+            encodeFloatElement(descriptor, 2, value.z())
+            encodeFloatElement(descriptor, 3, value.w())
+        }
     }
 
     override fun deserialize(decoder: Decoder): Quaternionfc {
